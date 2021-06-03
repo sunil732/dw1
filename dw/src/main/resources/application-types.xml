@@ -1,0 +1,21 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<types:mule xmlns:types="http://www.mulesoft.org/schema/mule/types">
+  <types:catalog>
+    <types:type name="JSON" format="json">
+      <types:shape format="weave" example="examples/books1.json"><![CDATA[%dw 2.0
+
+type JSON = Array<{|  param_name: String,   param_value: String|}> {"example": "[{\\\"param_name\\\":\\\"first\\\",\\\"param_value\\\":\\\"second\\\"},{\\\"param_name\\\":\\\"third\\\",\\\"param_value\\\":\\\"fourth\\\"}]"}
+
+]]></types:shape>
+    </types:type>
+  </types:catalog>
+  <types:enrichment select="#b4678bd7-a70c-4244-a99a-e023904ec09a">
+    <types:processor-declaration>
+      <types:input-event>
+        <types:message>
+          <types:payload type="JSON"/>
+        </types:message>
+      </types:input-event>
+    </types:processor-declaration>
+  </types:enrichment>
+</types:mule>

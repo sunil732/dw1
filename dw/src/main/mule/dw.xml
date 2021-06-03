@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:http="http://www.mulesoft.org/schema/mule/http"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/http http://www.mulesoft.org/schema/mule/http/current/mule-http.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<http:listener-config name="HTTP_Listener_config" doc:name="HTTP Listener config" doc:id="5f06f3fc-9f25-4b18-86ae-064aa7fbae91" >
+		<http:listener-connection host="0.0.0.0" port="8081" />
+	</http:listener-config>
+	<flow name="dwFlow" doc:id="12277038-3599-44b4-b016-1991516387f2" >
+		<http:listener doc:name="Listener" doc:id="d624703f-206b-4ce1-a061-fab338000a8c" config-ref="HTTP_Listener_config" path="/dw1"/>
+		<ee:transform doc:name="Transform Message" doc:id="b4678bd7-a70c-4244-a99a-e023904ec09a" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload map ((item,index) ->(item.param_name):item.param_value) reduce (
+	(item,accumulator) -> accumulator ++ item
+)]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<logger level="INFO" doc:name="Logger" doc:id="e5d5b120-49c2-44f5-94ef-3713edf6b39f" message="#[payload]"/>
+	</flow>
+</mule>
